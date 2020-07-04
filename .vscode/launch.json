@@ -1,0 +1,55 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Save Model",
+            "type": "python",
+            "request": "launch",
+            "env": {
+                "CUDA_VISIBLE_DEVICES": "1"
+            },
+            "program": "model_inspect.py",
+            "args": [
+                "--runmode=saved_model",
+                "--model_name=efficientdet-d2",
+                "--ckpt_path=efficientdet-d2",
+                "--saved_model_dir=savedmodeldir",
+                "--tflite_path=efficient-d2.tflite",
+                " --batch_size", "1",
+                "--input_image", "768"
+            ],
+            "console": "integratedTerminal",
+            "cwd": "${workspaceRoot}/efficientdet"
+        },
+        {
+            "name": "Convert to ONNX",
+            "type": "python",
+            "request": "launch",
+            "env": {
+                "CUDA_VISIBLE_DEVICES": "1"
+            },
+            "module": "tf2onnx.convert",
+            "args": [
+                "--saved-model", "savedmodeldir",
+                "--opset", "10",
+                "--output", "model.onnx",
+                "--inputs", "image_arrays:0",
+                "--outputs", "detections:0",
+                "--fold_const"
+            ],
+            "console": "integratedTerminal",
+            "cwd": "${workspaceRoot}/efficientdet"
+        }
+    ]
+}
