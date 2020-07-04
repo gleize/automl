@@ -581,9 +581,10 @@ class ServingDriver(object):
     if not self.sess:
       self.sess = self._build_session()
     with self.sess.graph.as_default():
-      image_files = tf.placeholder(tf.string, name='image_files', shape=[None])
-      raw_images = batch_image_files_decode(image_files)
-      raw_images = tf.identity(raw_images, name='image_arrays')
+      # image_files = tf.placeholder(tf.string, name='image_files', shape=[None])
+      # raw_images = batch_image_files_decode(image_files)
+      # raw_images = tf.identity(raw_images, name='image_arrays')
+      raw_images = tf.placeholder(tf.uint8, name='image_arrays', shape=[self.batch_size, params["image_size"][0], params["image_size"][1], 3])
       images, scales = batch_image_preprocess(raw_images, params['image_size'],
                                               self.batch_size)
       if params['data_format'] == 'channels_first':
@@ -603,7 +604,7 @@ class ServingDriver(object):
           export_ckpt=None)
 
     self.signitures = {
-        'image_files': image_files,
+        # 'image_files': image_files,
         'image_arrays': raw_images,
         'prediction': detections,
     }
